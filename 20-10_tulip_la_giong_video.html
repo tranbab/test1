@@ -9,147 +9,114 @@
 <style>
 :root{color-scheme:dark;--ink:#6b2a47;--paper:#fff6f9;--pink:#ff8fb8;--glow:#7cc0ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *,*::before,*::after{box-sizing:inherit}
-html,body{height:100%;margin:0;overflow:hidden;background:#050b2e;font-family:Quicksand,system-ui,sans-serif;color:#fff;-webkit-user-select:none;user-select:none}
+html,body{height:100%;margin:0;overflow:hidden;background:#050b2e;font-family:Quicksand,system-ui,sans-serif;color:#fff;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#050b2e;z-index:90}
-#app{position:fixed;inset:0;background:#050b2e;overflow:hidden}
-#bg{position:absolute;inset:0;background:linear-gradient(#050b2e 0%,#0b2270 45%,#1d5cc0 78%,#2a73d6 100%) center/cover no-repeat;opacity:0;transition:opacity 3s}
+#app{position:fixed;inset:0;background:#050b2e;overflow:hidden;transform:translateZ(0)}
+#bg{position:absolute;inset:0;background:linear-gradient(#050b2e 0%,#0b2270 45%,#1d5cc0 78%,#2a73d6 100%) center/cover no-repeat;opacity:0;transition:opacity 3.5s ease-in-out;will-change:opacity}
 .scene #bg,.gallery #bg{opacity:1}
-.mt,.grass,.moon,#ff{opacity:0;transition:opacity 3s .5s}
+.mt,.grass,.moon,#ff{opacity:0;transition:opacity 3.5s ease-in-out .8s;will-change:opacity}
 .scene .mt,.scene .grass,.scene .moon,.scene #ff,.gallery .mt,.gallery .grass,.gallery .moon,.gallery #ff{opacity:1}
 .has-bg .mt,.has-bg .grass,.has-bg .moon,.has-bg .bunny{display:none}
-#sky{position:absolute;inset:0;width:100%;height:100%}
+#sky{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .moon{position:absolute;top:7%;left:9%;width:18px;height:18px;border-radius:50%;box-shadow:-5px 3px 0 0 #fff4c9;transform:rotate(-20deg);filter:drop-shadow(0 0 6px #fff4c9)}
 .mt{position:absolute;left:0;bottom:22%;width:100%;height:30%}
 .grass{position:absolute;left:0;bottom:0;width:100%;height:30%;background:repeating-linear-gradient(100deg,transparent 0 5px,rgba(120,200,255,.22) 5px 6px),linear-gradient(#124a9a,#08285e 70%,#051a44)}
-#ff i{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff6b0;box-shadow:0 0 8px 2px #ffe97a;animation:fly linear infinite}
-@keyframes fly{0%{transform:translate(0,0) scale(.6);opacity:0}30%{opacity:1}100%{transform:translate(26px,-70px) scale(1.1);opacity:0}}
-.bunny{position:absolute;bottom:19%;width:22px;opacity:0;transition:opacity 2s 1.5s}
+#ff i{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff6b0;box-shadow:0 0 8px 2px #ffe97a;animation:fly linear infinite;will-change:transform,opacity}
+@keyframes fly{0%{transform:translate3d(0,0,0) scale(.6);opacity:0}30%{opacity:1}100%{transform:translate3d(26px,-70px,0) scale(1.1);opacity:0}}
+.bunny{position:absolute;bottom:19%;width:22px;opacity:0;transition:opacity 2.5s 2s}
 .scene .bunny,.gallery .bunny{opacity:.95}
-#title{position:absolute;top:calc(6% + 8px);left:0;right:0;margin:0;text-align:center;font:700 34px/1.15 'Dancing Script',cursive;color:#cfe6ff;text-shadow:0 0 6px #6fb4ff,0 0 18px #3d8cff;opacity:0;transition:opacity 2s}
+
+/* Đã làm chậm chuyển động tiêu đề */
+#title{position:absolute;top:calc(6% + 8px);left:50%;right:auto;transform:translateX(-50%);margin:0;text-align:center;font:700 34px/1.15 'Dancing Script',cursive;color:#cfe6ff;text-shadow:0 0 6px #6fb4ff,0 0 18px #3d8cff;opacity:0;transition:opacity 2.5s}
 .scene #title,.gallery #title{opacity:1}
-#cap{position:absolute;left:8%;right:8%;top:50%;margin:0;text-align:center;font-size:15px;letter-spacing:.04em;text-shadow:0 0 10px #000a;transition:opacity .6s;z-index:5;pointer-events:none}
-#bouquet{position:absolute;left:50%;bottom:15%;width:min(74vw,290px);transform:translateX(-50%);opacity:0;pointer-events:none}
+#cap{position:absolute;left:8%;right:8%;top:50%;margin:0;text-align:center;font-size:15px;letter-spacing:.04em;text-shadow:0 0 10px #000a;transition:opacity .8s ease-in-out;z-index:5;pointer-events:none}
+#bouquet{position:absolute;left:50%;bottom:15%;width:min(74vw,290px);transform:translateX(-50%);opacity:0;pointer-events:none;will-change:transform,opacity}
 .scene #bouquet,.gallery #bouquet{opacity:1}
 .scene #bouquet{pointer-events:auto}
-.scene #bouquet svg{animation:sway 5s ease-in-out 8s infinite;transform-origin:50% 100%}
-@keyframes sway{50%{transform:rotate(1.6deg) translateY(-6px)}}
+
+/* Làm chậm nhịp đung đưa bó hoa (từ 5.5s lên 8s) */
+.scene #bouquet svg{animation:sway 8s ease-in-out 9s infinite;transform-origin:50% 100%;will-change:transform}
+@keyframes sway{0%,100%{transform:rotate(-.5deg) translateY(0)}50%{transform:rotate(1.2deg) translateY(-7px)}}
 .gallery #bouquet{pointer-events:none}
 #bouquet svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 8px 18px #0008)}
-.fl,.st,.wr{opacity:0;transform-box:fill-box;transform-origin:50% 100%}
-.scene .fl,.gallery .fl{animation:bloom .9s cubic-bezier(.2,1.3,.4,1) both}
-.scene .st,.gallery .st{animation:grow .7s ease-out both}
-.scene .wr,.gallery .wr{animation:fadeIn 1.2s both}
-@keyframes bloom{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-@keyframes grow{from{transform:scaleY(0);opacity:1}to{transform:scaleY(1);opacity:1}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* Phong thư nảy chậm dịu hơn */
 #env{position:absolute;left:50%;top:64%;width:62px;height:46px;transform:translate(-50%,-50%);padding:0;border:0;background:none;cursor:pointer;opacity:0;visibility:hidden}
-.scene #env{animation:envIn .9s 6.9s both,beat 2s 7.8s infinite}
+.scene #env{animation:envIn 1.5s 9.5s both,beat 3s 11s infinite;will-change:transform,opacity}
 @keyframes envIn{from{opacity:0;visibility:hidden}to{opacity:1;visibility:visible}}
-@keyframes beat{0%,40%,100%{transform:translate(-50%,-50%) scale(1)}20%{transform:translate(-50%,-50%) scale(1.12)}}
+@keyframes beat{0%,40%,100%{transform:translate(-50%,-50%) scale(1)}20%{transform:translate(-50%,-50%) scale(1.08)}}
+
 #gallery{position:absolute;inset:0;pointer-events:none}
-.ph{position:absolute;width:92px;aspect-ratio:3/4;padding:4px;border-radius:8px;background:rgba(210,230,255,.95);border:2px solid #9fd0ff;box-shadow:0 0 16px 3px rgba(100,170,255,.8);touch-action:none;pointer-events:auto;cursor:grab;transition:transform 4s cubic-bezier(.25,.7,.25,1)}
+.ph{position:absolute;width:92px;aspect-ratio:3/4;padding:4px;border-radius:8px;background:rgba(210,230,255,.95);border:2px solid #9fd0ff;box-shadow:0 0 16px 3px rgba(100,170,255,.8);touch-action:none;pointer-events:auto;cursor:grab;transition:transform 5s cubic-bezier(.25,.7,.25,1);will-change:transform}
 .ph img,.ph div{width:100%;height:100%;border-radius:5px;object-fit:cover;pointer-events:none;display:block}
 .ph div{display:grid;place-items:center;font-size:30px;background:linear-gradient(160deg,#ffb3d1,#ff6fa5)}
-#intro{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:20;transition:opacity 1.2s}
+
+#intro{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:20;transition:opacity 1.5s}
 .scene #intro,.gallery #intro{opacity:0;pointer-events:none}
 #intro p{margin:0;font:700 22px 'Dancing Script',cursive;letter-spacing:.08em}
 #intro small{font-size:12px;color:#bcd6ff}
 #orb{width:74px;height:74px;border-radius:50%;border:0;padding:6px;cursor:pointer;background:conic-gradient(#9fd0ff calc(var(--p,0)*1%),rgba(255,255,255,.15) 0);box-shadow:0 0 24px #4a9bff;touch-action:none}
-#orb span{display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#bfe3ff,#1f6bff 60%,#0a2a8a);animation:pulse 1.8s infinite}
+#orb span{display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#bfe3ff,#1f6bff 60%,#0a2a8a);animation:pulse 2.2s infinite}
 @keyframes pulse{50%{transform:scale(.88);filter:brightness(1.3)}}
-#letter{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:rgba(2,8,40,.55);backdrop-filter:blur(3px);opacity:0;transition:opacity .5s}
+
+/* Thư mở ra chậm & êm hơn */
+#letter{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:rgba(2,8,40,.65);backdrop-filter:blur(4px);opacity:0;transition:opacity .8s ease-in-out}
 #letter.on{opacity:1}
 #letter[hidden]{display:none}
-.paper{position:relative;isolation:isolate;width:min(86vw,340px);max-height:82vh;overflow:auto;padding:28px 24px 22px;color:var(--ink);font:500 19px/1.5 'Dancing Script',cursive;text-align:center;transform:rotate(-1deg) scale(.9);transition:transform .6s cubic-bezier(.2,.9,.3,1.2)}
-#letter.on .paper{transform:rotate(-1deg) scale(1)}
-.paper::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--paper);border:3px solid #f08cb0;border-radius:6px;filter:url(#wavy)}
-.paper h2{margin:0 0 10px;font:700 24px 'Dancing Script',cursive;color:#d6407f}
-.paper p{margin:0 0 10px}
+.paper{position:relative;isolation:isolate;width:min(88vw,390px);max-height:82vh;overflow:auto;padding:32px 26px 24px;border-radius:14px;color:var(--ink);font:500 19px/1.58 'Dancing Script',cursive;text-align:center;transform:translateY(40px) rotateX(12deg) scale(.85);transition:transform 1s cubic-bezier(.2,.8,.2,1);will-change:transform}
+#letter.on .paper{transform:translateY(0) rotateX(0) rotate(-.5deg) scale(1)}
+.paper::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 10% 8%,#fff 0 2px,transparent 3px),linear-gradient(135deg,#fffafd,#fff0f6 60%,#ffe4ef);border:2px solid #ff9bc4;border-radius:14px;box-shadow:inset 0 0 0 5px #fff8, inset 0 0 28px #ffc4dc77}
+.paper h2{margin:0 0 10px;font:700 clamp(25px,6vw,31px) 'Dancing Script',cursive;color:#d6407f;text-shadow:0 2px 0 #fff}
+.paper p{margin:0 0 10px;min-height:1.1em}
+#body p{opacity:0;transform:translateY(9px)}
+#body p.typed{animation:paragraphIn 1.2s ease forwards}
+@keyframes paragraphIn{to{opacity:1;transform:translateY(0)}}
 .paper .sig{text-align:right;color:#d6407f}
-#x{position:absolute;top:-10px;right:-10px;width:28px;height:28px;border-radius:50%;border:2px solid #fff;background:#e8548c;color:#fff;font-size:15px;line-height:1;cursor:pointer;z-index:2}
-.btn{display:inline-block;margin-top:6px;padding:9px 20px;border:0;border-radius:99px;background:linear-gradient(135deg,#ff6fa5,#ff9ac0);color:#fff;font:700 14px Quicksand,sans-serif;cursor:pointer;box-shadow:0 0 16px rgba(255,111,165,.6)}
+#x{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:2px solid #fff;background:#e8548c;color:#fff;font-size:15px;line-height:1;cursor:pointer;z-index:2;box-shadow:0 3px 10px #c03b7180}
+.btn{display:inline-block;margin-top:6px;padding:9px 20px;border:0;border-radius:99px;background:linear-gradient(135deg,#ff6fa5,#ff9ac0);color:#fff;font:700 14px Quicksand,sans-serif;cursor:pointer;box-shadow:0 0 16px rgba(255,111,165,.6);transition:transform .3s,box-shadow .3s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 24px #ff6fa5aa}
+
 #more,#mus{position:fixed;z-index:30;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);backdrop-filter:blur(8px);color:#fff;font:700 13px Quicksand,sans-serif;cursor:pointer}
 #more{left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);padding:9px 18px;border-radius:99px}
 #mus{top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;width:38px;height:38px;border-radius:50%;font-size:16px}
 button:focus-visible{outline:3px solid #fff;outline-offset:3px}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}}
 
-/* ===== Nâng cấp hình ảnh và chuyển động ===== */
-#title{
-  width:min(94vw,520px);left:50%;right:auto;transform:translateX(-50%);
-  font-size:clamp(28px,6vw,43px);letter-spacing:.015em;
-  background:linear-gradient(180deg,#fff8fc 5%,#ffd4e8 48%,#a9d8ff 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 0 10px #82c9ff);
-}
-.scene #title,.gallery #title{animation:titleReveal 1.8s cubic-bezier(.2,.8,.2,1) both}
-@keyframes titleReveal{
-  0%{opacity:0;filter:blur(10px) drop-shadow(0 0 0 transparent);letter-spacing:.18em}
-  100%{opacity:1;filter:blur(0) drop-shadow(0 0 10px #82c9ff);letter-spacing:.015em}
-}
+#title{width:min(94vw,520px);font-size:clamp(28px,6vw,43px);letter-spacing:.015em;background:linear-gradient(180deg,#fff8fc 5%,#ffd4e8 48%,#a9d8ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px #82c9ff)}
+.scene #title,.gallery #title{animation:titleReveal 2.8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes titleReveal{0%{opacity:0;filter:blur(10px) drop-shadow(0 0 0 transparent);letter-spacing:.18em}100%{opacity:1;filter:blur(0) drop-shadow(0 0 10px #82c9ff);letter-spacing:.015em}}
 #bouquet{width:min(88vw,370px);bottom:10%;filter:drop-shadow(0 14px 22px #00103966)}
-#bouquet svg{filter:drop-shadow(0 8px 18px #0005)}
-.scene #bouquet svg{animation:sway 5.5s ease-in-out 7s infinite}
-@keyframes sway{0%,100%{transform:rotate(-.5deg) translateY(0)}50%{transform:rotate(1.2deg) translateY(-7px)}}
-#env{width:72px;height:54px;top:65%;filter:drop-shadow(0 5px 12px #ff9bc9aa)}
-#env svg{width:100%;height:100%;overflow:visible}
-.scene #env{animation:envIn 1s 7s both,beat 2.2s 8s infinite}
-#env::after{content:"Chạm để mở thư";position:absolute;white-space:nowrap;top:57px;left:50%;
- transform:translateX(-50%);font:600 11px Quicksand,sans-serif;color:#fff4fa;
- text-shadow:0 1px 8px #001039;letter-spacing:.04em}
-#letter{perspective:1000px;background:radial-gradient(ellipse at center,#244b8dcc,#020828eF)}
-.paper{
-  width:min(88vw,390px);padding:32px 26px 24px;
-  border-radius:14px;background:transparent;
-  box-shadow:0 25px 75px #0008;
-  font-size:clamp(18px,4.5vw,21px);line-height:1.58;
-  transform:translateY(50px) rotateX(14deg) scale(.78);
-}
-#letter.on .paper{transform:translateY(0) rotateX(0) rotate(-.5deg) scale(1)}
-.paper::before{
-  background:
-    radial-gradient(circle at 10% 8%,#fff 0 2px,transparent 3px),
-    linear-gradient(135deg,#fffafd,#fff0f6 60%,#ffe4ef);
-  border:2px solid #ff9bc4;border-radius:14px;
-  box-shadow:inset 0 0 0 5px #fff8, inset 0 0 28px #ffc4dc77;
-  filter:none;
-}
-.paper h2{font-size:clamp(25px,6vw,31px);text-shadow:0 2px 0 #fff}
-.paper p{min-height:1.1em}
-#body p{opacity:0;transform:translateY(9px)}
-#body p.typed{animation:paragraphIn .65s ease forwards}
-@keyframes paragraphIn{to{opacity:1;transform:translateY(0)}}
-#x{top:8px;right:8px;width:30px;height:30px;border:2px solid #fff;box-shadow:0 3px 10px #c03b7180}
-.btn{transition:transform .2s,box-shadow .2s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 0 24px #ff6fa5aa}
-#cap{font-size:clamp(14px,3.5vw,17px);line-height:1.6;color:#fff8fc;
- text-shadow:0 2px 10px #001039,0 0 18px #8ecbff}
+#env::after{content:"Chạm để mở thư";position:absolute;white-space:nowrap;top:57px;left:50%;transform:translateX(-50%);font:600 11px Quicksand,sans-serif;color:#fff4fa;text-shadow:0 1px 8px #001039;letter-spacing:.04em}
+#cap{font-size:clamp(14px,3.5vw,17px);line-height:1.6;color:#fff8fc;text-shadow:0 2px 10px #001039,0 0 18px #8ecbff}
 
-/* Trình tự đồng bộ: thân cây -> từng lá -> từng bông -> giấy gói và nơ */
-#bq .st{
-  opacity:1!important;stroke-dasharray:420;stroke-dashoffset:420;
-  animation:stemGrow 1.15s cubic-bezier(.2,.7,.2,1) forwards;
-}
-#bq .leaf{
-  opacity:0;transform-box:fill-box;transform-origin:50% 100%;
-  animation:leafUnfurl .85s cubic-bezier(.2,.8,.2,1) both;
-}
-#bq .fl{
-  opacity:0;transform-box:fill-box;transform-origin:50% 85%;
-  animation:tulipBloom .9s cubic-bezier(.15,.8,.25,1.2) both;
-}
-#bq .wrap{
-  opacity:0;transform-box:fill-box;transform-origin:50% 100%;
-  animation:wrapReveal 1.1s cubic-bezier(.2,.8,.2,1) both;
-}
+/* Trình tự nở hoa tulip làm chậm gấp đôi (mượt dịu) */
+#bq .st{opacity:1!important;stroke-dasharray:420;stroke-dashoffset:420;animation:stemGrow 1.8s cubic-bezier(.2,.7,.2,1) forwards}
+#bq .leaf{opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:leafUnfurl 1.4s cubic-bezier(.2,.8,.2,1) both}
+#bq .fl{opacity:0;transform-box:fill-box;transform-origin:50% 85%;animation:tulipBloom 1.5s cubic-bezier(.15,.8,.25,1.2) both}
+#bq .wrap{opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:wrapReveal 1.8s cubic-bezier(.2,.8,.2,1) both}
 @keyframes stemGrow{to{stroke-dashoffset:0}}
 @keyframes leafUnfurl{0%{opacity:0;transform:scale(.15) rotate(-16deg)}65%{opacity:1;transform:scale(1.06) rotate(3deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
 @keyframes tulipBloom{0%{opacity:0;transform:translateY(18px) scale(.12) rotate(-12deg)}65%{opacity:1;transform:translateY(-2px) scale(1.08) rotate(2deg)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
 @keyframes wrapReveal{0%{opacity:0;transform:translateY(20px) scale(.94)}100%{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Banner nhắc nhở mở trình duyệt ngoài (Chỉ hiện khi mở trong In-App Browser) */
+#browserNotice{position:fixed;inset:0;z-index:9999;background:rgba(5,11,46,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;color:#fff;backdrop-filter:blur(8px)}
+#browserNotice[hidden]{display:none!important}
+#browserNotice h3{font-size:20px;color:#ff8fb8;margin:0 0 12px}
+#browserNotice p{font-size:14px;line-height:1.6;color:#dce7ff;margin:0 0 20px}
+#browserNotice .guide{background:rgba(255,255,255,.1);border:1px dashed #ff8fb8;padding:12px 16px;border-radius:10px;font-size:13px;color:#fff}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wavy"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter></svg>
+
+<!-- Banner hướng dẫn mở bằng Chrome/Safari nếu lỡ mở bằng Zalo/Messenger/TikTok -->
+<div id="browserNotice" hidden>
+  <h3>Chuyển sang Trình Duyệt Bút/Hệ Thống 🌸</h3>
+  <p>Bạn đang mở trang web trong ứng dụng (Zalo/Messenger/TikTok). Nhạc và hiệu ứng sẽ hoạt động tốt nhất khi mở bằng <b>Chrome</b> hoặc <b>Safari</b>.</p>
+  <div class="guide">
+    👉 Hãy nhấn vào biểu tượng <b>••• (3 chấm)</b> ở góc trên bên phải<br>và chọn <b>"Mở bằng trình duyệt"</b> (Open in Chrome/Safari).
+  </div>
+</div>
 
 <div id="app" class="intro">
   <div id="bg"></div>
@@ -198,13 +165,27 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 <input id="file" type="file" accept="image/*" multiple hidden>
 <button id="mus" aria-label="Bật tắt nhạc">♪</button>
 
-<!-- Thẻ audio HTML chuẩn liên kết đúng file nhac.mp3 -->
 <audio id="audioEl" loop preload="auto" src="nhac.mp3"></audio>
 
 <script>
+/* Kiểm tra trình duyệt WebView/In-App (Zalo, Messenger, Facebook, TikTok) */
+(function checkInAppBrowser(){
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const isInApp = (
+    ua.indexOf("FBAN") > -1 ||
+    ua.indexOf("FBAV") > -1 ||
+    ua.indexOf("Zalo") > -1 ||
+    ua.indexOf("Line") > -1 ||
+    ua.indexOf("TikTok") > -1
+  );
+  if (isInApp) {
+    document.getElementById("browserNotice").hidden = false;
+  }
+})();
+
 /* ====== CẤU HÌNH ====== */
 const CONFIG = {
-  musicSrc: "nhac.mp3", /* Đường dẫn khớp với file nhạc trong thư mục */
+  musicSrc: "nhac.mp3",
   to: "Gửi tình yêu của anh,",
   letter: [
     "Nhân ngày 20/10, anh muốn nói với em rằng em là điều dịu dàng nhất mà cuộc sống đã dành cho anh.",
@@ -221,12 +202,11 @@ const CONFIG = {
   bg: "https://cdn.upanhlaylink.com/i/ccJHJ54V.jpg",
   photos: []
 };
-/* ================================ */
 
 const $=s=>document.querySelector(s), app=$('#app'), cap=$('#cap');
 if(CONFIG.bg){$('#bg').style.backgroundImage=`url("${CONFIG.bg}")`;document.body.classList.add('has-bg')}
 
-/* Bó hoa tulip nhiều lớp, có ánh sáng và giấy gói */
+/* Bó hoa tulip - Thời gian xuất hiện từng chi tiết được dãn cách mượt hơn */
 (function(){
   const pos=[
     [150,66,1.02],[112,88,.94],[188,88,.96],[78,119,.86],[150,108,1.02],
@@ -256,23 +236,23 @@ if(CONFIG.bg){$('#bg').style.backgroundImage=`url("${CONFIG.bg}")`;document.body
   </defs>`;
   pos.forEach(([x,y],i)=>{
     const bend=(x-150)*.25;
-    s+=`<path class="st" style="animation-delay:${.15+i*.18}s" d="M150 304 Q${150+bend} ${220+y*.25} ${x} ${y+20}" fill="none" stroke="#3f9862" stroke-width="5" stroke-linecap="round"/>`;
+    s+=`<path class="st" style="animation-delay:${.3+i*.25}s" d="M150 304 Q${150+bend} ${220+y*.25} ${x} ${y+20}" fill="none" stroke="#3f9862" stroke-width="5" stroke-linecap="round"/>`;
   });
   const leafPaths=[
-    {d:"M145 296 C119 280 86 258 58 226 C91 238 127 263 149 292Z",c:"#2f8758",v:"M147 294 Q105 254 65 230",delay:3.15},
-    {d:"M147 291 C126 267 108 233 101 197 C126 220 145 259 151 290Z",c:"#68c77d",v:"M149 289 Q125 235 105 202",delay:3.32},
-    {d:"M150 292 C139 262 139 229 146 194 C160 229 160 264 153 293Z",c:"#4eae6c",v:"M152 291 Q151 239 147 199",delay:3.49},
-    {d:"M152 295 C159 264 179 232 205 210 C195 246 174 278 155 296Z",c:"#3b995f",v:"M154 293 Q178 250 201 215",delay:3.66},
-    {d:"M153 298 C179 280 215 260 245 229 C230 262 194 290 155 301Z",c:"#65bd75",v:"M156 298 Q205 273 240 233",delay:3.83},
-    {d:"M142 300 C116 291 88 278 69 253 C99 261 126 279 147 298Z",c:"#398d5a",v:"M145 299 Q105 278 73 256",delay:4.00},
-    {d:"M148 293 C132 266 123 238 124 211 C143 237 152 266 152 294Z",c:"#81d58a",v:"M151 292 Q143 246 127 216",delay:4.17},
-    {d:"M154 296 C169 267 190 248 218 235 C203 263 179 287 155 299Z",c:"#287b50",v:"M156 297 Q190 267 214 239",delay:4.34},
-    {d:"M145 301 C119 300 91 290 76 273 C105 276 131 288 149 300Z",c:"#4ca967",v:"M147 300 Q111 289 80 276",delay:4.51},
-    {d:"M151 291 C146 263 151 233 164 207 C169 238 163 269 154 294Z",c:"#70ca7d",v:"M153 291 Q160 246 163 212",delay:4.68},
-    {d:"M155 299 C183 292 211 279 232 259 C207 267 178 285 153 301Z",c:"#3e965f",v:"M156 299 Q198 282 228 262",delay:4.85},
-    {d:"M143 298 C125 281 111 257 105 234 C125 251 141 276 148 299Z",c:"#5fbd76",v:"M147 298 Q127 266 108 238",delay:5.02},
-    {d:"M153 297 C164 278 181 260 200 250 C188 272 170 290 154 300Z",c:"#8bd88d",v:"M155 298 Q179 275 197 253",delay:5.19},
-    {d:"M148 302 C130 298 113 290 101 278 C122 282 139 291 151 301Z",c:"#2f8758",v:"M149 301 Q126 291 105 281",delay:5.36}
+    {d:"M145 296 C119 280 86 258 58 226 C91 238 127 263 149 292Z",c:"#2f8758",v:"M147 294 Q105 254 65 230",delay:4.2},
+    {d:"M147 291 C126 267 108 233 101 197 C126 220 145 259 151 290Z",c:"#68c77d",v:"M149 289 Q125 235 105 202",delay:4.4},
+    {d:"M150 292 C139 262 139 229 146 194 C160 229 160 264 153 293Z",c:"#4eae6c",v:"M152 291 Q151 239 147 199",delay:4.6},
+    {d:"M152 295 C159 264 179 232 205 210 C195 246 174 278 155 296Z",c:"#3b995f",v:"M154 293 Q178 250 201 215",delay:4.8},
+    {d:"M153 298 C179 280 215 260 245 229 C230 262 194 290 155 301Z",c:"#65bd75",v:"M156 298 Q205 273 240 233",delay:5.0},
+    {d:"M142 300 C116 291 88 278 69 253 C99 261 126 279 147 298Z",c:"#398d5a",v:"M145 299 Q105 278 73 256",delay:5.2},
+    {d:"M148 293 C132 266 123 238 124 211 C143 237 152 266 152 294Z",c:"#81d58a",v:"M151 292 Q143 246 127 216",delay:5.4},
+    {d:"M154 296 C169 267 190 248 218 235 C203 263 179 287 155 299Z",c:"#287b50",v:"M156 297 Q190 267 214 239",delay:5.6},
+    {d:"M145 301 C119 300 91 290 76 273 C105 276 131 288 149 300Z",c:"#4ca967",v:"M147 300 Q111 289 80 276",delay:5.8},
+    {d:"M151 291 C146 263 151 233 164 207 C169 238 163 269 154 294Z",c:"#70ca7d",v:"M153 291 Q160 246 163 212",delay:6.0},
+    {d:"M155 299 C183 292 211 279 232 259 C207 267 178 285 153 301Z",c:"#3e965f",v:"M156 299 Q198 282 228 262",delay:6.2},
+    {d:"M143 298 C125 281 111 257 105 234 C125 251 141 276 148 299Z",c:"#5fbd76",v:"M147 298 Q127 266 108 238",delay:6.4},
+    {d:"M153 297 C164 278 181 260 200 250 C188 272 170 290 154 300Z",c:"#8bd88d",v:"M155 298 Q179 275 197 253",delay:6.6},
+    {d:"M148 302 C130 298 113 290 101 278 C122 282 139 291 151 301Z",c:"#2f8758",v:"M149 301 Q126 291 105 281",delay:6.8}
   ];
   leafPaths.forEach(({d,c,v,delay})=>{
     s+=`<g class="leaf" style="animation-delay:${delay}s">
@@ -281,7 +261,7 @@ if(CONFIG.bg){$('#bg').style.backgroundImage=`url("${CONFIG.bg}")`;document.body
     </g>`;
   });
   pos.forEach(([x,y,sc],i)=>{
-    const rot=(x-150)/8, delay=(6.25+i*.27).toFixed(2);
+    const rot=(x-150)/8, delay=(7.5+i*.35).toFixed(2);
     s+=`<g class="fl" style="animation-delay:${delay}s">
       <g transform="translate(${x} ${y}) rotate(${rot}) scale(${sc})">
         <path d="M-19 2 C-22 -12 -15 -28 -7 -36 C-3 -28 -1 -23 0 -17 C3 -28 8 -36 11 -38 C21 -23 23 -9 18 3 C14 15 7 20 0 19 C-9 19 -16 13 -19 2Z" fill="url(#petalSide)" stroke="#f66da8" stroke-width=".8"/>
@@ -294,7 +274,7 @@ if(CONFIG.bg){$('#bg').style.backgroundImage=`url("${CONFIG.bg}")`;document.body
       </g>
     </g>`;
   });
-  s+=`<g class="wrap" style="animation-delay:10.1s">
+  s+=`<g class="wrap" style="animation-delay:12.5s">
     <path d="M44 226 L150 266 L256 226 L177 424 Q151 440 125 424Z" fill="url(#wrapG)" stroke="#f9e2bd" stroke-width="1.5"/>
     <path d="M44 226 L150 266 L123 422 L72 289Z" fill="#f5dfb8" opacity=".9"/>
     <path d="M256 226 L150 266 L178 422 L229 286Z" fill="#d7b27c" opacity=".85"/>
@@ -309,23 +289,31 @@ if(CONFIG.bg){$('#bg').style.backgroundImage=`url("${CONFIG.bg}")`;document.body
   $('#bq').innerHTML=s;
 })();
 
-/* Sao, sao băng */
+/* Sao, sao băng tối ưu trên thiết bị di động (Tự điều chỉnh số lượng sao) */
 const cv=$('#sky'),cx=cv.getContext('2d');let W,H,stars=[],shoot=[];
-function size(){W=cv.width=innerWidth;H=cv.height=innerHeight;stars=Array.from({length:120},()=>({x:Math.random()*W,y:Math.random()*H*.6,r:Math.random()*1.4+.3,a:Math.random()*6.28,v:Math.random()*.03+.01}))}
-addEventListener('resize',size);size();
-setInterval(()=>{if(shoot.length<2)shoot.push({x:Math.random()*W*.8,y:Math.random()*H*.25,l:60+Math.random()*50,a:1})},2200);
-(function loop(){cx.clearRect(0,0,W,H);
+const isMobile = window.innerWidth < 600;
+function size(){
+  W=cv.width=innerWidth;H=cv.height=innerHeight;
+  const count = isMobile ? 50 : 110; // Giảm bớt số lượng sao trên điện thoại để siêu mượt
+  stars=Array.from({length:count},()=>({x:Math.random()*W,y:Math.random()*H*.6,r:Math.random()*1.3+.3,a:Math.random()*6.28,v:Math.random()*.025+.008}))
+}
+addEventListener('resize',size,{passive:true});size();
+setInterval(()=>{if(shoot.length<2)shoot.push({x:Math.random()*W*.8,y:Math.random()*H*.25,l:50+Math.random()*40,a:1})},2800);
+(function loop(){
+  cx.clearRect(0,0,W,H);
   stars.forEach(s=>{s.a+=s.v;cx.fillStyle=`rgba(255,255,255,${.35+.65*Math.abs(Math.sin(s.a))})`;cx.beginPath();cx.arc(s.x,s.y,s.r,0,6.3);cx.fill()});
   shoot=shoot.filter(s=>s.a>0);
-  shoot.forEach(s=>{s.x+=6;s.y+=3;s.a-=.012;const g=cx.createLinearGradient(s.x,s.y,s.x-s.l,s.y-s.l/2);g.addColorStop(0,`rgba(255,255,255,${s.a})`);g.addColorStop(1,'rgba(255,255,255,0)');cx.strokeStyle=g;cx.lineWidth=1.6;cx.beginPath();cx.moveTo(s.x,s.y);cx.lineTo(s.x-s.l,s.y-s.l/2);cx.stroke()});
-  requestAnimationFrame(loop)})();
+  shoot.forEach(s=>{s.x+=5;s.y+=2.5;s.a-=.01;const g=cx.createLinearGradient(s.x,s.y,s.x-s.l,s.y-s.l/2);g.addColorStop(0,`rgba(255,255,255,${s.a})`);g.addColorStop(1,'rgba(255,255,255,0)');cx.strokeStyle=g;cx.lineWidth=1.4;cx.beginPath();cx.moveTo(s.x,s.y);cx.lineTo(s.x-s.l,s.y-s.l/2);cx.stroke()});
+  requestAnimationFrame(loop)
+})();
 
-/* Đom đóm */
-for(let i=0;i<26;i++){const f=document.createElement('i');f.style.cssText=`left:${Math.random()*100}%;top:${62+Math.random()*34}%;animation-duration:${4+Math.random()*5}s;animation-delay:${-Math.random()*6}s`;$('#ff').appendChild(f)}
+/* Đom đóm (Giảm bớt trên mobile) */
+const ffCount = isMobile ? 12 : 24;
+for(let i=0;i<ffCount;i++){const f=document.createElement('i');f.style.cssText=`left:${Math.random()*100}%;top:${62+Math.random()*34}%;animation-duration:${5+Math.random()*6}s;animation-delay:${-Math.random()*6}s`;$('#ff').appendChild(f)}
 
 /* Lời nhắn chạy */
 let ci=0,capList=CONFIG.captions,capTimer;
-function say(t){cap.style.opacity=0;setTimeout(()=>{cap.textContent=t;cap.style.opacity=1},500)}
+function say(t){cap.style.opacity=0;setTimeout(()=>{cap.textContent=t;cap.style.opacity=1},600)}
 function cycle(){say(capList[ci++%capList.length])}
 
 /* ===== XỬ LÝ ÂM THANH ===== */
@@ -347,7 +335,7 @@ function music() {
       on = true;
       $('#mus').style.opacity = '1';
     }).catch(e => {
-      console.log("Cần tương tác chạm/mở quà để phát nhạc:", e);
+      console.log("Cần tương tác chạm để phát nhạc:", e);
     });
   });
 }
@@ -367,10 +355,10 @@ function open(){
   app.className='scene';
   music();
   cycle();
-  capTimer=setInterval(cycle,3600);
+  capTimer=setInterval(cycle,4200);
 }
 function tick(){
-  const p=Math.min(100,(performance.now()-t0)/9);
+  const p=Math.min(100,(performance.now()-t0)/12); // Tăng thời gian giữ bóng mượt hơn
   orb.style.setProperty('--p', p);
   if(p>=100){hold=null;open()}else hold=requestAnimationFrame(tick);
 }
@@ -398,28 +386,28 @@ function showLetter(){
   $('#to').style.opacity='0'; $('#sig').style.opacity='0'; $('#go').style.opacity='0';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     L.classList.add('on');
-    letterTimers.push(setTimeout(()=>{$('#to').style.transition='opacity .7s, transform .7s';$('#to').style.opacity='1';$('#to').style.transform='translateY(0)'},450));
+    letterTimers.push(setTimeout(()=>{$('#to').style.transition='opacity .9s, transform .9s';$('#to').style.opacity='1';$('#to').style.transform='translateY(0)'},550));
     paragraphs.forEach((p,i)=>letterTimers.push(setTimeout(()=>{
       p.classList.add('typed');
-    },950+i*1050)));
-    letterTimers.push(setTimeout(()=>{$('#sig').style.transition='opacity .8s';$('#sig').style.opacity='1'},950+paragraphs.length*1050));
-    letterTimers.push(setTimeout(()=>{$('#go').style.transition='opacity .8s, transform .3s';$('#go').style.opacity='1'},1200+paragraphs.length*1050));
+    },1200+i*1300))); // Chữ hiện lên chậm rãi hơn
+    letterTimers.push(setTimeout(()=>{$('#sig').style.transition='opacity 1s';$('#sig').style.opacity='1'},1200+paragraphs.length*1300));
+    letterTimers.push(setTimeout(()=>{$('#go').style.transition='opacity 1s, transform .4s';$('#go').style.opacity='1'},1500+paragraphs.length*1300));
   }));
 }
 function hideLetter(cb){
   letterTimers.forEach(clearTimeout);letterTimers=[];
-  L.classList.remove('on');setTimeout(()=>{L.hidden=true;cb&&cb()},500)
+  L.classList.remove('on');setTimeout(()=>{L.hidden=true;cb&&cb()},700)
 }
 $('#env').onclick=()=>{
   const env=$('#env');
-  env.animate([{transform:'translate(-50%,-50%) scale(1)'},{transform:'translate(-50%,-50%) scale(1.18) rotate(-4deg)'},{transform:'translate(-50%,-50%) scale(.92) rotate(3deg)'},{transform:'translate(-50%,-50%) scale(1)'}],
-  {duration:620,easing:'cubic-bezier(.2,.8,.2,1)'});
-  setTimeout(showLetter,220);
+  env.animate([{transform:'translate(-50%,-50%) scale(1)'},{transform:'translate(-50%,-50%) scale(1.15) rotate(-3deg)'},{transform:'translate(-50%,-50%) scale(.95) rotate(2deg)'},{transform:'translate(-50%,-50%) scale(1)'}],
+  {duration:800,easing:'cubic-bezier(.2,.8,.2,1)'});
+  setTimeout(showLetter,300);
 };
 $('#x').onclick=()=>hideLetter();
 $('#go').onclick=()=>hideLetter(toGallery);
 
-/* Bước 3: ảnh bay lên, kéo được */
+/* Bước 3: ảnh bay lên (Tối ưu kéo thả cực mượt trên điện thoại) */
 const G=$('#gallery');let z=1,n=0;
 function addPhoto(src){
   const c=document.createElement('div');c.className='ph';
@@ -429,16 +417,37 @@ function addPhoto(src){
   c.style.left=x+'px';c.style.top=y+'px';
   c.style.transform=`translateY(${h}px) rotate(${rot}deg)`;c.dataset.r=rot;
   G.appendChild(c);
-  setTimeout(()=>{c.style.transform=`rotate(${rot}deg)`},2500+(n++%8)*700);
+  setTimeout(()=>{c.style.transform=`rotate(${rot}deg)`},3000+(n++%8)*800);
+  
   let dx,dy,drag=false;
-  c.addEventListener('pointerdown',e=>{drag=true;c.setPointerCapture(e.pointerId);c.style.transition='none';c.style.zIndex=++z;dx=e.clientX-c.offsetLeft;dy=e.clientY-c.offsetTop;c.style.transform=`rotate(${rot}deg) scale(1.08)`});
-  c.addEventListener('pointermove',e=>{if(!drag)return;c.style.left=e.clientX-dx+'px';c.style.top=e.clientY-dy+'px'});
-  ['pointerup','pointercancel'].forEach(k=>c.addEventListener(k,()=>{drag=false;c.style.transition='transform .3s';c.style.transform=`rotate(${rot}deg)`}));
+  c.addEventListener('pointerdown',e=>{
+    drag=true;
+    c.setPointerCapture(e.pointerId);
+    c.style.transition='none';
+    c.style.zIndex=++z;
+    dx=e.clientX-c.offsetLeft;
+    dy=e.clientY-c.offsetTop;
+    c.style.transform=`rotate(${rot}deg) scale(1.06)`;
+  });
+  c.addEventListener('pointermove',e=>{
+    if(!drag)return;
+    c.style.left=e.clientX-dx+'px';
+    c.style.top=e.clientY-dy+'px';
+  });
+  ['pointerup','pointercancel'].forEach(k=>c.addEventListener(k,()=>{
+    drag=false;
+    c.style.transition='transform .4s ease-out';
+    c.style.transform=`rotate(${rot}deg)`;
+  }));
 }
-function wipe(){const b=$('#bouquet'),t=performance.now();
-  (function f(){const p=Math.min(1,(performance.now()-t)/4000),m=-15+p*130,g=`linear-gradient(to top,transparent ${m}%,#000 ${m+15}%)`;
+function wipe(){
+  const b=$('#bouquet'),t=performance.now();
+  (function f(){
+    const p=Math.min(1,(performance.now()-t)/5000),m=-15+p*130,g=`linear-gradient(to top,transparent ${m}%,#000 ${m+15}%)`;
     b.style.webkitMaskImage=g;b.style.maskImage=g;
-    if(p<1)requestAnimationFrame(f);else b.style.visibility='hidden'})()}
+    if(p<1)requestAnimationFrame(f);else b.style.visibility='hidden'
+  })()
+}
 function toGallery(){
   clearInterval(capTimer);say(CONFIG.galleryCaption);
   app.className='gallery';$('#more').hidden=false;wipe();
