@@ -1,12 +1,3 @@
-<ElicitationsGroup>
-
-Dưới đây là mã nguồn đã được tối ưu hóa đặc biệt để **phủ kín hoàn toàn 100% màn hình bằng một thảm hoa dày đặc, liên tục và không hề có một khe hở nào lộ ra background phía sau**:
-* Tăng số lượng hoa lên tới **450 bông** với đủ mọi kích thước lớn nhỏ khác nhau được sắp xếp đan xen khít rạt.
-* Thêm hiệu ứng nền hoa lót lớp sâu phía sau và lớp hoa nổi bật phía trước tạo độ sâu chân thực tuyệt đối.
-
-Bạn hãy copy toàn bộ đoạn mã này thay thế vào file `index.html`:
-
-```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -115,6 +106,20 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ph{position:absolute;width:92px;aspect-ratio:3/4;padding:4px;border-radius:8px;background:rgba(210,230,255,.95);border:2px solid #9fd0ff;box-shadow:0 0 16px 3px rgba(100,170,255,.8);touch-action:none;pointer-events:auto;cursor:grab;transition:transform 1s cubic-bezier(0.25, 1, 0.5, 1)}
 .ph img,.ph div{width:100%;height:100%;border-radius:5px;object-fit:cover;pointer-events:none;display:block}
 .ph div{display:grid;place-items:center;font-size:30px;background:linear-gradient(160deg,#ffb3d1,#ff6fa5)}
+
+/* CSS cho hoa kéo thả */
+.interactive-flower {
+  position: absolute;
+  cursor: grab;
+  touch-action: none;
+  pointer-events: auto;
+  transition: left 1.6s cubic-bezier(0.25, 1, 0.5, 1), top 1.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s ease;
+  z-index: 45;
+}
+.interactive-flower:active {
+  cursor: grabbing;
+  transform: scale(1.2) !important;
+}
 
 #intro{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:35;transition:opacity 1.2s;pointer-events:auto}
 .scene #intro,.gallery #intro{opacity:0;pointer-events:none}
@@ -231,28 +236,34 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 /* ====== CẤU HÌNH ====== */
 const CONFIG = {
   musicSrc: "nhac.mp3", 
-  to: "Gửi tình yêu của anh,",
+  to: "Gửi Frigg của em,",
   letter: [
-    "Nhân ngày 20/10, anh muốn nói với em rằng em là điều dịu dàng nhất mà cuộc sống đã dành cho anh.",
-    "Từ khi có em, mỗi ngày của anh đều ý nghĩa hơn. Em cho anh động lực, cho anh niềm vui và cho anh một mái ấm để trở về.",
-    "Chúc em luôn xinh đẹp, tràn đầy năng lượng và mãi hạnh phúc. Cảm ơn em đã ở bên anh."
+    "Nhân ngày 20/10, em muốn gửi đến anh bó hoa tulip này như một lời cảm ơn vì đã ở cạnh và giúp đỡ em những lúc khó khăn . ",
+    "Chị là nguồn động lực để em có thể bước tiếp, em hơi vụng về trong lời nói nên em chỉ có thể dùng bó hoa này để bày tỏ",
+    "Chúc chị luôn xinh đẹp, tràn đầy năng lượng và mãi hạnh phúc. Mong những bình yên sẽ mãi bên chị."
   ],
-  sign: "Yêu em thật nhiều 💗",
+  sign: "20/10 thật vui vẻ 💗",
   captions: [
-    "Đêm nay có một bó tulip gửi đến em",
-    "Vì em xứng đáng với những điều dịu dàng nhất",
+    "Đêm nay có một bó tulip gửi đến chị",
+    "Vì chị xứng đáng với những điều dịu dàng nhất",
     "Chạm vào phong thư nhé"
   ],
   galleryCaption: "Những khoảnh khắc của riêng mình",
   bg: "https://cdn.upanhlaylink.com/i/ccJHJ54V.jpg",
-  photos: []
+  photos: ["https://cdn.upanhlaylink.com/i/0chy8tvo.jpeg",
+    "https://cdn.upanhlaylink.com/i/Nsr2dT66.jpeg",
+    "https://cdn.upanhlaylink.com/i/aW7wU4pn.jpeg",
+    "https://cdn.upanhlaylink.com/i/ZAqXHroq.jpeg",
+    "https://cdn.upanhlaylink.com/i/3hg11WBK.jpeg",
+    "https://cdn.upanhlaylink.com/i/SVxfGAkS.jpeg"
+  ]
 };
 /* ======================== */
 
 const $=s=>document.querySelector(s), app=$('#app'), cap=$('#cap');
 if(CONFIG.bg){$('#bg').style.backgroundImage=`url("${CONFIG.bg}")`;document.body.classList.add('has-bg')}
 
-/* Bó hoa tulip nhiều lớp với thời gian trễ được làm chậm rãi */
+/* Bó hoa tulip */
 (function(){
   const pos=[
     [150,66,1.02],[112,88,.94],[188,88,.96],[78,119,.86],[150,108,1.02],
@@ -450,9 +461,10 @@ $('#env').onclick=()=>{
 $('#x').onclick=()=>hideLetter();
 $('#go').onclick=()=>hideLetter(toGallery);
 
-/* Bước 3: Ảnh & Hiệu ứng thảm hoa phủ kín 100% màn hình */
+/* Bước 3: Tương tác hoa, xếp trái tim sau 10s, và xếp chữ NGỌC chuẩn xác sau 10s tiếp theo */
 const G=$('#gallery');let z=1,n=0;
 let galleryTimer = null;
+let globalFlowerElements = [];
 
 function addPhoto(src){
   const c=document.createElement('div');c.className='ph';
@@ -541,7 +553,6 @@ function wipe(){
   })(startTime);
 }
 
-/* SAU 10S: Gom ảnh và bùng nổ thảm hoa khổng lồ phủ kín 100% không khe hở */
 function triggerPhotoGatherAndFlowerExplosion() {
   const photos = document.querySelectorAll('.ph');
   if (photos.length === 0) return;
@@ -558,11 +569,11 @@ function triggerPhotoGatherAndFlowerExplosion() {
 
   setTimeout(() => {
     photos.forEach(p => p.remove());
-    createSeamlessDenseFlowerCarpet();
+    createInteractiveFlowerCarpet();
   }, 1200);
 }
 
-function createSeamlessDenseFlowerCarpet() {
+function createInteractiveFlowerCarpet() {
   const container = document.createElement('div');
   container.style.cssText = `
     position: fixed;
@@ -576,7 +587,8 @@ function createSeamlessDenseFlowerCarpet() {
 
   const cx = window.innerWidth / 2;
   const cy = window.innerHeight / 2;
-  const totalFlowers = 450; // Tăng lên 450 bông hoa phủ đặc kín màn hình
+  const totalFlowers = 420;
+  globalFlowerElements = [];
 
   const colorPalettes = [
     { petal: "#ff1a75", inner: "#ff66b2", center: "#fff566" },
@@ -591,11 +603,12 @@ function createSeamlessDenseFlowerCarpet() {
 
   for (let i = 0; i < totalFlowers; i++) {
     const flower = document.createElement('div');
-    const size = Math.random() * 50 + 35; // Kích thước lớn đan xen
+    flower.className = 'interactive-flower';
+    const size = Math.random() * 38 + 26;
     const col = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
 
     flower.innerHTML = `
-      <svg viewBox="0 0 60 60" width="${size}" height="${size}" style="filter: drop-shadow(0 0 4px rgba(255,255,255,0.4))">
+      <svg viewBox="0 0 60 60" width="${size}" height="${size}" style="pointer-events:none; filter: drop-shadow(0 0 4px rgba(255,255,255,0.4))">
         <g fill="${col.petal}" opacity="0.95">
           <circle cx="30" cy="11" r="9"/>
           <circle cx="30" cy="49" r="9"/>
@@ -617,29 +630,137 @@ function createSeamlessDenseFlowerCarpet() {
       </svg>
     `;
     
-    flower.style.cssText = `
-      position: absolute;
-      left: ${cx}px;
-      top: ${cy}px;
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 0;
-      transition: all 1.6s cubic-bezier(0.1, 1, 0.3, 1);
-    `;
+    flower.style.left = cx + 'px';
+    flower.style.top = cy + 'px';
+    flower.style.transform = 'translate(-50%, -50%) scale(0)';
     container.appendChild(flower);
+    globalFlowerElements.push(flower);
+
+    let isDragging = false, startX, startY, initialLeft, initialTop;
+    flower.addEventListener('pointerdown', e => {
+      isDragging = true;
+      flower.setPointerCapture(e.pointerId);
+      flower.style.transition = 'none';
+      startX = e.clientX;
+      startY = e.clientY;
+      initialLeft = flower.offsetLeft;
+      initialTop = flower.offsetTop;
+      e.stopPropagation();
+    });
+    flower.addEventListener('pointermove', e => {
+      if (!isDragging) return;
+      flower.style.left = (initialLeft + (e.clientX - startX)) + 'px';
+      flower.style.top = (initialTop + (e.clientY - startY)) + 'px';
+    });
+    ['pointerup', 'pointercancel'].forEach(ev => {
+      flower.addEventListener(ev, e => {
+        if (!isDragging) return;
+        isDragging = false;
+        flower.style.transition = 'left 1.6s cubic-bezier(0.25, 1, 0.5, 1), top 1.6s cubic-bezier(0.25, 1, 0.5, 1)';
+      });
+    });
 
     const angle = Math.random() * Math.PI * 2;
-    // Phân bổ đều khoảng cách từ tâm ra toàn bộ các biên để phủ kín hoàn toàn
     const maxDist = Math.hypot(window.innerWidth, window.innerHeight) * 0.55;
     const distance = Math.pow(Math.random(), 0.7) * maxDist; 
-    const targetX = Math.cos(angle) * distance;
-    const targetY = Math.sin(angle) * distance;
+    const targetX = cx + Math.cos(angle) * distance;
+    const targetY = cy + Math.sin(angle) * distance;
     const rot = Math.random() * 360;
 
     setTimeout(() => {
-      flower.style.transform = `translate(calc(-50% + ${targetX}px), calc(-50% + ${targetY}px)) scale(1.2) rotate(${rot}deg)`;
-      flower.style.opacity = '1';
-    }, 10 + i * 2);
+      flower.style.transform = `translate(-50%, -50%) scale(1.1) rotate(${rot}deg)`;
+      flower.style.left = targetX + 'px';
+      flower.style.top = targetY + 'px';
+    }, 20 + i * 2);
   }
+
+  // SAU 10S: Xếp hình trái tim
+  setTimeout(() => {
+    arrangeFlowersIntoHeart();
+  }, 5000);
+
+  // SAU 20S: Xếp thành chữ NGỌC chuẩn xác
+  setTimeout(() => {
+    arrangeFlowersIntoNgoc();
+  }, 5000);
+}
+
+/* 1. Xếp hình trái tim */
+function arrangeFlowersIntoHeart() {
+  if (!globalFlowerElements || globalFlowerElements.length === 0) return;
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2 - 20;
+  const scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 38;
+
+  globalFlowerElements.forEach((flower, index) => {
+    const t = (index / globalFlowerElements.length) * Math.PI * 2;
+    const hx = 16 * Math.pow(Math.sin(t), 3);
+    const hy = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+
+    const targetX = cx + hx * scaleFactor;
+    const targetY = cy + hy * scaleFactor;
+
+    flower.style.transition = 'left 2s cubic-bezier(0.25, 1, 0.5, 1), top 2s cubic-bezier(0.25, 1, 0.5, 1), transform 2s cubic-bezier(0.25, 1, 0.5, 1)';
+    flower.style.left = targetX + 'px';
+    flower.style.top = targetY + 'px';
+    flower.style.transform = 'translate(-50%, -50%) scale(1) rotate(0deg)';
+  });
+}
+
+/* 2. Xếp chữ NGỌC chuẩn nét cấu trúc hình học */
+function arrangeFlowersIntoNgoc() {
+  if (!globalFlowerElements || globalFlowerElements.length === 0) return;
+  const ngocPoints = [];
+  const total = globalFlowerElements.length;
+  const perLetter = Math.floor(total / 4);
+
+  function addLine(x1, y1, x2, y2, count) {
+    for (let i = 0; i <= count; i++) {
+      const f = i / (count || 1);
+      ngocPoints.push([x1 + (x2 - x1) * f, y1 + (y2 - y1) * f]);
+    }
+  }
+
+  function addArc(cx, cy, r, startAngle, endAngle, count) {
+    for (let i = 0; i <= count; i++) {
+      const a = startAngle + (endAngle - startAngle) * (i / (count || 1));
+      ngocPoints.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]);
+    }
+  }
+
+  // --- Chữ N ---
+  addLine(-0.78, 0.45, -0.78, -0.45, Math.floor(perLetter * 0.3));
+  addLine(-0.78, -0.45, -0.52, 0.45, Math.floor(perLetter * 0.4));
+  addLine(-0.52, 0.45, -0.52, -0.45, Math.floor(perLetter * 0.3));
+
+  // --- Chữ G ---
+  addArc(-0.15, 0, 0.42, -Math.PI * 0.7, Math.PI * 1.5, Math.floor(perLetter * 0.65));
+  addLine(-0.15, 0, 0.12, 0, Math.floor(perLetter * 0.2));
+  addLine(0.12, 0, 0.12, 0.42, Math.floor(perLetter * 0.15));
+
+  // --- Chữ Ọ ---
+  addArc(0.48, 0, 0.40, 0, Math.PI * 2, Math.floor(perLetter * 0.85));
+  addLine(0.55, 0.50, 0.65, 0.62, Math.floor(perLetter * 0.15));
+
+  // --- Chữ C (ĐÃ SỬA: Đảo chiều mở đúng hướng sang bên phải) ---
+  const cPointsCount = total - ngocPoints.length;
+  addArc(1.10, 0, 0.42, Math.PI * 0.35, Math.PI * 1.65, Math.max(10, cPointsCount));
+
+  const screenCx = window.innerWidth / 2;
+  const screenCy = window.innerHeight / 2;
+  const scaleX = Math.min(window.innerWidth, window.innerHeight) * 0.40;
+  const scaleY = Math.min(window.innerWidth, window.innerHeight) * 0.30;
+
+  globalFlowerElements.forEach((flower, index) => {
+    const pt = ngocPoints[index % ngocPoints.length];
+    const targetX = screenCx + pt[0] * scaleX;
+    const targetY = screenCy + pt[1] * scaleY;
+
+    flower.style.transition = 'left 2.2s cubic-bezier(0.25, 1, 0.5, 1), top 2.2s cubic-bezier(0.25, 1, 0.5, 1), transform 2.2s cubic-bezier(0.25, 1, 0.5, 1)';
+    flower.style.left = targetX + 'px';
+    flower.style.top = targetY + 'px';
+    flower.style.transform = 'translate(-50%, -50%) scale(1.05) rotate(0deg)';
+  });
 }
 
 function toGallery(){
